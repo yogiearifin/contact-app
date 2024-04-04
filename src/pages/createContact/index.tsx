@@ -5,7 +5,7 @@ import { getContactDetail } from "../../store/slices/detailContactSlice";
 import { RootState } from "../../store/store";
 import { IdParams } from "../../types";
 import { Loading } from "../../components/loading";
-import { postContact, putContact } from "../../store/slices/contactSlice";
+import { clearError, postContact, putContact } from "../../store/slices/contactSlice";
 import Swal from "sweetalert2";
 
 type DataFormType = {
@@ -16,7 +16,7 @@ type DataFormType = {
 
 export const CreateContact = () => {
   const dispatch = useAppDispatch();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const detail = useAppSelecter((state: RootState) => state.detail);
   const contact = useAppSelecter((state: RootState) => state.contact);
   const params = useParams<IdParams>();
@@ -65,12 +65,14 @@ export const CreateContact = () => {
   const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
     e.stopPropagation();
     e.preventDefault();
-    if (e.dataTransfer.files.length && e.dataTransfer.files[0].type.includes('image')) {
+    if (e.dataTransfer.files.length === 1 && e.dataTransfer.files[0].type.includes('image')) {
       const reader = new FileReader();
       reader.readAsDataURL(e.dataTransfer.files[0]);
       reader.onload = () => {
         setPreview(reader.result?.toString());
       };
+    } else {
+      Swal.fire('Error', 'Only accept one image file', 'error');
     }
   };
 
@@ -121,10 +123,25 @@ export const CreateContact = () => {
           navigate('/');
         }
       });
+    } else {
+      if (contact.error?.length) {
+        Swal.fire({
+          title: 'Error',
+          text: contact.error,
+          icon: 'error',
+          confirmButtonText: 'OK',
+          allowEscapeKey: false,
+          allowOutsideClick: false,
+        }).then((res) => {
+          if (res.isConfirmed) {
+            dispatch(clearError());
+          }
+        });
+      }
     }
-  });
+  }, [contact.message, contact.error]);
 
-  const validSubmission = dataForm.age && dataForm.firstName.length && dataForm.lastName && preview?.length;
+  const validSubmission = parseInt(dataForm.age) > 0 && dataForm.firstName.length && dataForm.lastName && preview?.length;
 
   return (
     <main className="p-4" data-testid='create-contact'>
@@ -132,7 +149,10 @@ export const CreateContact = () => {
       <div className="flex justify-center items-center">
         {
           detail.loading || contact.loading ?
-            <Loading /> :
+            <div className="flex flex-col items-center mt-4">
+              <Loading />
+              <h2 className="mt-4">{detail.loading ? 'Loading contact data' : 'Submitting data'}...</h2>
+            </div> :
             <form className="flex flex-col mt-4" data-testid='create-contact-form'>
               <label htmlFor="firstName" className="mr-4">First Name</label>
               <input className="mb-4 pl-2" id="firstName" type="text" value={ dataForm.firstName } onChange={ e => onChangeForm(e) } />
@@ -150,10 +170,10 @@ export const CreateContact = () => {
                   </div>
                 </div> : <div className="relative z-10 min-h-32 flex items-center border-2 border-black border-dashed p-16 cursor-pointer" onDrop={ (e) => handleDrop(e) } onDragOver={ (e) => handleDragOver(e) }>
                   <label className="relative z-0 cursor-pointer text-sm" htmlFor="photo">Drag file or click here to upload image</label>
-                  <input type="file" id="photo" className="hidden" onChange={ onChangeFileForm } />
+                  <input type="file" accept="image/*" id="photo" className="hidden" onChange={ onChangeFileForm } />
                 </div>
               }
-              <button className="mt-4" disabled={ !validSubmission } onClick={ (e) => {
+              <button className="mt-4 bg-[#03045e] text-white" disabled={ !validSubmission } onClick={ (e) => {
                 e.preventDefault();
                 handleSubmission();
               } }>Submit</button>

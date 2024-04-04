@@ -32,7 +32,11 @@ const initialState: ContactType = {
 export const ContactSlice = createSlice({
   name: 'contact',
   initialState,
-  reducers: {},
+  reducers: {
+    clearError(state) {
+      state.error = ''
+    }
+  },
   extraReducers: (builder) => {
     builder.addCase(getAllContact.pending, (state) => {
       state.loading = true;
@@ -51,7 +55,6 @@ export const ContactSlice = createSlice({
 
     });
     builder.addCase(deleteContact.pending, (state) => {
-      state.loading = true;
       state.message = '';
     });
     builder.addCase(deleteContact.fulfilled, (state) => {
@@ -97,5 +100,5 @@ export const ContactSlice = createSlice({
   }
 });
 
-
+export const {clearError} = ContactSlice.actions
 export default ContactSlice.reducer;
