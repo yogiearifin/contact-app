@@ -2,6 +2,6 @@ import './index.css'
 
 export const Loading = () => {
   return(
-    <div className="loader"></div>
+    <div className="loader" data-testid='loader'></div>
   )
 }

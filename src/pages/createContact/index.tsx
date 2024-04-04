@@ -127,13 +127,13 @@ export const CreateContact = () => {
   const validSubmission = dataForm.age && dataForm.firstName.length && dataForm.lastName && preview?.length;
 
   return (
-    <main className="p-4">
+    <main className="p-4" data-testid='create-contact'>
       <h1>{ params.id?.length ? 'Edit' : 'Create' } Contact</h1>
       <div className="flex justify-center items-center">
         {
           detail.loading || contact.loading ?
             <Loading /> :
-            <form className="flex flex-col mt-4">
+            <form className="flex flex-col mt-4" data-testid='create-contact-form'>
               <label htmlFor="firstName" className="mr-4">First Name</label>
               <input className="mb-4 pl-2" id="firstName" type="text" value={ dataForm.firstName } onChange={ e => onChangeForm(e) } />
               <label htmlFor="lastName" className="mr-4">Last Name</label>

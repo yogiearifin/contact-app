@@ -16,7 +16,7 @@ export const Homepage = () => {
   }, []);
 
   return (
-    <main className="relative z-0">
+    <main className="relative z-0" data-testid='homepage'>
       <h1>Contact List</h1>
       <div>
         { contact.loading ?
@@ -24,7 +24,7 @@ export const Homepage = () => {
             <Loading />
           </div> :
           <div className="relative overflow-x-auto">
-            <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+            <table data-testid='homepage-table' className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
               <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                 <tr>
                   <th scope="col" className="px-6 py-3 text-center">
@@ -65,7 +65,7 @@ export const Homepage = () => {
                           { item.age }
                         </td>
                         <td className="p-4">
-                          <img style={{width:'200px', height:'200px'}} src={ item.photo } alt={ `${ item.firstName }'s avatar` } />
+                          <img style={ { width: '200px', height: '200px' } } src={ item.photo } alt={ `${ item.firstName }'s avatar` } />
                         </td>
                         <td className="p-4">
                           <div className="flex gap-8">
