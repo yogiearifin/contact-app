@@ -8,7 +8,7 @@ This is a project for Technical Test at Jenius utilizing their own contact API
 - Looking good on mobile and desktop screen.
 - Drag and drop image upload.
 - Blazingly fast webapp powered by Vite.
-- Typesafe code powered by Typescript
+- Typesafe code powered by Typescript.
 - Now featuring some unit tests.
 
 ## How to Run the Project
