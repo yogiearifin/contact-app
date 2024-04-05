@@ -151,7 +151,7 @@ export const CreateContact = () => {
           detail.loading || contact.loading ?
             <div className="flex flex-col items-center mt-4">
               <Loading />
-              <h2 className="mt-4">{detail.loading ? 'Loading contact data' : 'Submitting data'}...</h2>
+              <h2 className="mt-4">{ detail.loading ? 'Loading contact data' : 'Submitting data' }...</h2>
             </div> :
             <form className="flex flex-col mt-4" data-testid='create-contact-form'>
               <label htmlFor="firstName" className="mr-4">First Name</label>
@@ -159,8 +159,10 @@ export const CreateContact = () => {
               <label htmlFor="lastName" className="mr-4">Last Name</label>
               <input className="mb-4 pl-2" id="lastName" type="text" value={ dataForm.lastName } onChange={ e => onChangeForm(e) } />
               <label htmlFor="age" className="mr-4">Age</label>
-              <input className="mb-4 pl-2" id="age" type="number" value={ dataForm.age } onChange={ e => onChangeForm(e) } />
-
+              <div className="mb-4">
+                <input className="pl-2 w-full" id="age" type="number" value={ dataForm.age } onChange={ e => onChangeForm(e) } />
+                { parseInt(dataForm.age) < 0 ? <p className="text-red-500">negative number not allowed</p> : parseInt(dataForm.age) === 0 ?<p className="text-red-500">input number greater than 0</p> : null  }
+              </div>
               { preview?.length ?
                 <div className="flex flex-col items-center">
                   <p>Preview Image</p>
